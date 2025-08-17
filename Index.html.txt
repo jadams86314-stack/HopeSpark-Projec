@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HopeSparkDigital | Lighting the Way to Your Digital Home</title>
+
+  <!-- SEO -->
+  <meta name="description" content="HopeSparkDigital designs, launches, and grows revenue-ready websites in minutes with our intelligent platform." />
+  <link rel="canonical" href="https://hopespark.digital/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="HopeSparkDigital" />
+  <meta property="og:description" content="Lighting the Way to Your Digital Home." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hopespark.digital/" />
+  <meta property="og:image" content="/og-cover.jpg" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="HopeSparkDigital" />
+  <meta name="twitter:description" content="Lighting the Way to Your Digital Home." />
+  <meta name="twitter:image" content="/og-cover.jpg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind + Chart.js -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Three.js core (for hero 3D); postprocessing loaded via module below -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <style>
+    /* ========== HSD Brand Tokens ========== */
+    :root{
+      --hsd-teal:#12B5B0; --hsd-pink:#FF3FA4; --hsd-ink:#0D0C1D; --hsd-ink-soft:#1A192A;
+      --hsd-ink-glass:rgba(26,25,42,0.8); --hsd-text:#D7DBE0; --hsd-white:#FFFFFF; --hsd-border:rgba(255,255,255,0.12);
+      --font-display:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      --font-body:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      --hsd-pulse:3000ms; --hsd-sweep:2400ms; --hsd-ease:cubic-bezier(.22,.61,.36,1);
+      --glow-pink:0 0 24px rgba(255,63,164,.28); --glow-teal:0 0 24px rgba(18,181,176,.28);
+      --motion-scale: 1; /* global motion scaler */
+    }
+
+    html,body{background:var(--hsd-ink); color:var(--hsd-text)}
+    body{font-family:var(--font-body)}
+    .section-bg{background:var(--hsd-ink-glass); backdrop-filter:blur(10px)}
+    .bordered{border:1px solid var(--hsd-border)}
+
+    /* Header/Nav */
+    .nav-link{position:relative; transition:color .3s var(--hsd-ease)}
+    .nav-link::after{content:""; position:absolute; left:50%; bottom:-4px; height:2px; width:0; background:var(--hsd-pink); transform:translateX(-50%); transition:width .3s var(--hsd-ease)}
+    .nav-link:hover, .nav-link[aria-current="true"]{color:var(--hsd-pink)}
+    .nav-link[aria-current="true"]::after{width:100%}
+
+    /* Icon lockup */
+    .hsd-icon{filter:drop-shadow(0 0 10px rgba(255,63,164,.35))}
+    .hsd-icon .spark{transform-origin:50% 50%; animation:sparkPulse var(--hsd-pulse) var(--hsd-ease) infinite}
+    @keyframes sparkPulse{0%,100%{opacity:.9; transform:scale(1)} 50%{opacity:1; transform:scale(1.06)}}
+
+    /* Slogan effects */
+    .slogan{position:relative; display:inline-block; color:var(--hsd-white); text-shadow:0 0 8px rgba(255,63,164,.45)}
+    .slogan .highlight{color:var(--hsd-pink)}
+    .sweep::after{content:""; position:absolute; inset:0; background:linear-gradient(120deg,transparent 35%, rgba(255,255,255,.75) 50%, transparent 65%); transform:translateX(-180%); animation:sweep var(--hsd-sweep) var(--hsd-ease) infinite; mix-blend-mode:screen; pointer-events:none; animation-duration: calc(var(--hsd-sweep) * var(--sweep-speed, 1));}
+    @keyframes sweep{0%{transform:translateX(-180%)} 60%,100%{transform:translateX(180%)}}
+
+    /* Micro-sparks */
+    .sparkle{position:absolute; width:6px; height:6px; border-radius:50%; background:radial-gradient(circle,var(--hsd-pink) 0%, rgba(255,63,164,0) 70%); filter:drop-shadow(0 0 6px rgba(255,63,164,.8)); animation:twinkle 2.6s ease-in-out infinite alternate}
+    .sparkle.teal{background:radial-gradient(circle,var(--hsd-teal) 0%, rgba(18,181,176,0) 70%); filter:drop-shadow(0 0 6px rgba(18,181,176,.8)); animation-delay:.8s}
+    @keyframes twinkle{from{opacity:.35; transform:scale(.85)} to{opacity:1; transform:scale(1.15)}}
+
+    /* Cards */
+    .platform-card{background:var(--hsd-ink-glass); transition:transform .4s var(--hsd-ease), box-shadow .4s var(--hsd-ease); position:relative; overflow:hidden}
+    .platform-card::before{content:""; position:absolute; inset:0; border-radius:.75rem; padding:2px; background:linear-gradient(45deg,var(--hsd-teal), var(--hsd-pink)); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:destination-out; mask-composite:exclude; opacity:0; transition:opacity .4s var(--hsd-ease)}
+    .platform-card:hover{box-shadow:var(--glow-pink)} .platform-card:hover::before{opacity:1}
+
+    /* Fade-in */
+    .fade-in-section{opacity:0; transform:translateY(40px); transition:opacity .8s var(--hsd-ease), transform .8s var(--hsd-ease)}
+    .fade-in-section.is-visible{opacity:1; transform:translateY(0)}
+
+    /* Badges & paywall */
+    .badge{display:inline-flex; align-items:center; gap:.5rem; padding:.25rem .6rem; border-radius:999px; font-size:.8rem; border:1px solid var(--hsd-border); background:rgba(255,255,255,.04)}
+    .paywall{position:relative}
+    .paywall::after{content:"Members Only"; position:absolute; inset:0; display:grid; place-items:center; background:rgba(10,10,10,.55); color:#fff; font-weight:700; letter-spacing:.05em}
+
+    /* Chart */
+    .chart-container{position:relative; width:100%; max-width:700px; margin-inline:auto; height:350px}
+    @media (min-width:768px){.chart-container{height:420px}}
+
+    /* Focus styles & reduced motion */
+    :focus-visible{outline:2px solid var(--hsd-teal); outline-offset:3px}
+    @media (prefers-reduced-motion: reduce){
+      :root{ --motion-scale: 0; }
+      .sweep::after,.sparkle,.hsd-icon .spark{animation:none}
+      .platform-card,#hero-content>*{transition:none}
+      #hero3d-wrap, #spark-trail{ display:none; }
+    }
+
+    /* 3D hero canvas behind headline */
+    #hero3d-wrap{ position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none }
+    #hero3d{ width:100%; height:100%; display:block; }
+
+    /* 3D coverflow carousel */
+    .coverflow{ perspective:1200px; position:relative; overflow:visible; height:360px }
+    .coverflow-track{ position:relative; transform-style:preserve-3d; transition: transform 600ms var(--hsd-ease); will-change: transform; height:100% }
+    .coverflow-item{ position:absolute; top:50%; left:50%; transform-style:preserve-3d; width:260px; margin-left:-130px; margin-top:-140px }
+    .coverflow .shadow{ position:absolute; bottom:-16px; left:10%; right:10%; height:24px; border-radius:50%; background: radial-gradient(ellipse at center, rgba(0,0,0,.35), rgba(0,0,0,0)); transform: translateZ(-1px) }
+
+    /* Glossy 3D tilt with live highlight */
+    .tilt3d{ --rx:0; --ry:0; --glx:50%; --gly:50%; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0); transition: transform 220ms var(--hsd-ease); background: var(--hsd-ink-glass); position:relative; overflow:hidden }
+    .tilt3d::after{ content:""; position:absolute; inset:-40%; background: radial-gradient( circle at var(--glx) var(--gly), rgba(255,255,255,.18), transparent 40%); mix-blend-mode: screen; pointer-events:none; transition: opacity 200ms var(--hsd-ease); opacity:.55 }
+    .tilt3d:hover{ box-shadow: var(--glow-pink) }
+
+    /* Cursor spark trail canvas */
+    #spark-trail{ position:fixed; inset:0; z-index:5; pointer-events:none; mix-blend-mode: screen; }
+    
+    /* Loading Spinner */
+    .loader {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #FFF;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+    @keyframes rotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+  </style>
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"HopeSparkDigital",
+    "url":"https://hopespark.digital/",
+    "slogan":"Lighting the Way to Your Digital Home.",
+    "logo":"https://hopespark.digital/logo.svg",
+    "sameAs":[]
+  }
+  </script>
+</head>
+<body class="antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:bg-black/70 focus:text-white focus:px-3 focus:py-2 focus:rounded">Skip to content</a>
+
+  <!-- Background particles (teal/pink) -->
+  <canvas id="particle-background" class="fixed top-0 left-0 w-full h-full z-[-1]"></canvas>
+
+  <header id="header" class="bg-[#0D0C1D]/80 backdrop-blur-lg sticky top-0 z-50 border-b" style="border-color:var(--hsd-border)" role="banner">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Primary">
+      <a href="#" class="flex items-center gap-3 group" aria-label="HopeSparkDigital Home">
+        <!-- Lockup icon -->
+        <svg class="hsd-icon" width="34" height="34" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs><linearGradient id="hsdG" x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#12B5B0"/><stop offset="1" stop-color="#FF3FA4"/></linearGradient></defs>
+          <path d="M48 12c-17 0-30 13-30 28 0 8 3 15 10 20 3 2 5 6 6 10l1 4h26l1-4c1-4 3-8 6-10 7-5 10-12 10-20 0-15-13-28-30-28Z" stroke="url(#hsdG)" stroke-width="4" stroke-linecap="round"/>
+          <rect x="34" y="74" width="28" height="6" rx="3" stroke="url(#hsdG)" stroke-width="4"/>
+          <path class="spark" d="M48 40c4-8 16-8 18 2 2 10-18 18-18 18S28 52 30 42c2-10 14-10 18-2Z" fill="url(#hsdG)" opacity=".85"/>
+        </svg>
+        <div class="leading-tight">
+          <span class="block text-xl md:text-2xl font-bold text-white" style="font-family:var(--font-display)">HopeSparkDigital</span>
+          <span class="block text-sm text-[color:var(--hsd-text)]">Lighting the Way to Your Digital Home.</span>
+        </div>
+      </a>
+      <div class="hidden md:flex gap-6">
+        <a href="#market" class="nav-link text-gray-300 font-medium">Marketplace</a>
+        <a href="#subscriptions" class="nav-link text-gray-300 font-medium">Subscriptions</a>
+        <a href="#deals" class="nav-link text-gray-300 font-medium">Deals</a>
+        <a href="#blog" class="nav-link text-gray-300 font-medium">Auto‑Blog</a>
+        <a href="#packages" class="nav-link text-gray-300 font-medium">Packages</a>
+        <a href="#pricing" class="nav-link text-gray-300 font-medium">Pricing</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="hidden md:inline-block text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-lg" style="background:var(--hsd-pink); box-shadow:var(--glow-pink)">Get a Quote</a>
+        <button id="mobile-menu-button" class="md:hidden text-gray-300" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+        </button>
+      </div>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2" role="dialog" aria-modal="true">
+      <a href="#market" class="block nav-link text-gray-300">Marketplace</a>
+      <a href="#subscriptions" class="block nav-link text-gray-300">Subscriptions</a>
+      <a href="#deals" class="block nav-link text-gray-300">Deals</a>
+      <a href="#blog" class="block nav-link text-gray-300">Auto‑Blog</a>
+      <a href="#packages" class="block nav-link text-gray-300">Packages</a>
+      <a href="#pricing" class="block nav-link text-gray-300">Pricing</a>
+      <a href="#contact" class="block text-white text-center mt-2 px-4 py-2 rounded-lg transition" style="background:var(--hsd-pink)">Get a Quote</a>
+    </div>
+  </header>
+
+  <main id="main" class="container mx-auto px-6">
+    <!-- HERO -->
+    <section id="hero" class="text-center py-16 md:py-24 fade-in-section -mx-6 px-6 relative">
+      <div id="hero3d-wrap"><canvas id="hero3d"></canvas></div>
+      <div id="hero-content">
+        <h1 class="text-5xl md:text-7xl tracking-tight leading-tight text-white" style="font-family:var(--font-display)">
+          <span class="slogan sweep">Lighting the Way <span class="highlight">to Your Digital Home.</span></span>
+        </h1>
+        <p id="hero-subcopy" class="mt-5 text-lg md:text-xl max-w-3xl mx-auto">
+          Launch a revenue-ready website and growth stack in minutes with our intelligent platform.
+        </p>
+        <div class="mt-8 flex items-center justify-center gap-3">
+          <span class="badge"><span>⚡</span><span id="stat-sites">0</span> sites today</span>
+          <span class="badge"><span>💰</span>$<span id="stat-revenue">0</span> revenue</span>
+          <span class="badge"><span>🟢</span><span id="stat-live">0</span> live users</span>
+        </div>
+        <div class="mt-10 relative inline-block">
+          <a id="cta-primary" href="#market" class="text-white px-8 py-4 rounded-lg text-lg font-semibold transition-transform duration-300 hover:scale-105 inline-block" style="background:var(--hsd-teal); box-shadow:var(--glow-teal)">Explore the Marketplace</a>
+          <span class="sparkle" style="top:-10px; left:-14px"></span>
+          <span class="sparkle teal" style="top:-18px; right:-18px"></span>
+          <span class="sparkle" style="bottom:-12px; right:-8px; width:8px; height:8px"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES MARKETPLACE -->
+    <section id="market" class="py-16 md:py-24 fade-in-section">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-white" style="font-family:var(--font-display)">Services Marketplace</h2>
+        <p class="mt-3 text-lg max-w-2xl mx-auto">One‑click, auto‑fulfilled services. Buy now, results generate instantly.</p>
+      </div>
+      <div id="market-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- SUBSCRIPTIONS / MEMBERSHIP -->
+    <section id="subscriptions" class="py-16 md:py-24 section-bg rounded-2xl fade-in-section">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-white" style="font-family:var(--font-display)">Subscriptions</h2>
+        <p class="mt-3 text-lg max-w-2xl mx-auto">Unlock premium generators and continuous growth automations.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bordered rounded-xl p-6">
+          <h3 class="text-2xl font-bold text-white mb-2">Starter</h3>
+          <p class="mb-4">$19/mo</p>
+          <ul class="space-y-2 mb-6">
+            <li>• Smart copy blocks</li>
+            <li>• SEO quick fixes</li>
+            <li>• 3 programmatic pages</li>
+          </ul>
+          <button class="px-5 py-2 rounded-lg text-white font-semibold" style="background:var(--hsd-teal); box-shadow:var(--glow-teal)" data-sub="starter">Start</button>
+        </div>
+        <div class="bordered rounded-xl p-6 relative">
+          <span class="badge absolute right-4 top-4">Most Popular</span>
+          <h3 class="text-2xl font-bold text-white mb-2">Pro</h3>
+          <p class="mb-4">$49/mo</p>
+          <ul class="space-y-2 mb-6">
+            <li>• Unlimited copy</li>
+            <li>• Auto‑blog daily</li>
+            <li>• 50 programmatic pages</li>
+            <li>• Smart recommendations</li>
+          </ul>
+          <button class="px-5 py-2 rounded-lg text-white font-semibold" style="background:var(--hsd-pink); box-shadow:var(--glow-pink)" data-sub="pro">Upgrade</button>
+        </div>
+        <div class="bordered rounded-xl p-6">
+          <h3 class="text-2xl font-bold text-white mb-2">Elite</h3>
+          <p class="mb-4">$149/mo</p>
+          <ul class="space-y-2 mb-6">
+            <li>• Auto A/B testing</li>
+            <li>• Video shorts</li>
+            <li>• Unlimited programmatic pages</li>
+            <li>• API access</li>
+          </ul>
+          <button class="px-5 py-2 rounded-lg text-white font-semibold" style="background:var(--hsd-teal); box-shadow:var(--glow-teal)" data-sub="elite">Go Elite</button>
+        </div>
+      </div>
+
+      <!-- Member tools: paywalled -->
+      <div class="mt-12 grid md:grid-cols-3 gap-6">
+        <div class="bordered rounded-xl p-5 paywall" id="tool-logo">
+          <h4 class="text-xl font-semibold text-white">Logo Spark</h4>
+          <p class="text-sm mt-1">Generate a clean, merch‑ready logo system.</p>
+        </div>
+        <div class="bordered rounded-xl p-5 paywall" id="tool-funnel">
+          <h4 class="text-xl font-semibold text-white">Funnel Builder</h4>
+          <p class="text-sm mt-1">Create a 3‑step conversion funnel in minutes.</p>
+        </div>
+        <div class="bordered rounded-xl p-5 paywall" id="tool-seo">
+          <h4 class="text-xl font-semibold text-white">Programmatic SEO Studio</h4>
+          <p class="text-sm mt-1">Generate keyword‑targeted pages at scale.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AFFILIATE DEALS (3D COVERFLOW) -->
+    <section id="deals" class="py-16 md:py-24 fade-in-section">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-white" style="font-family:var(--font-display)">Matched Deals</h2>
+        <p class="mt-3 text-lg max-w-2xl mx-auto">Curated offers that fit your niche — updated in real time.</p>
+      </div>
+      <div id="deals-coverflow" class="coverflow">
+        <div class="coverflow-track" id="coverflow-track"></div>
+      </div>
+      <p class="text-xs mt-6 opacity-70">Some links may be affiliate links. We may earn a commission at no cost to you.</p>
+    </section>
+
+    <!-- AUTO-BLOG + PROGRAMMATIC SEO -->
+    <section id="blog" class="py-16 md:py-24 section-bg rounded-2xl fade-in-section">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-white" style="font-family:var(--font-display)">Auto‑Blog</h2>
+        <p class="mt-3 text-lg max-w-2xl mx-auto">Fresh, SEO‑optimized posts generated and published automatically.</p>
+      </div>
+      <div id="blog-grid" class="grid md:grid-cols-3 gap-6"></div>
+
+      <div class="mt-12">
+        <h3 class="text-2xl font-bold text-white mb-3">Programmatic Pages</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <input id="kw" class="rounded-lg bg-black/20 bordered px-3 py-2" placeholder="Enter a keyword or industry (e.g., 'plumber Phoenix')" />
+          <button id="gen-pp" class="px-4 py-2 rounded-lg text-white font-semibold flex items-center justify-center gap-2" style="background:var(--hsd-teal); box-shadow:var(--glow-teal)">✨ Generate Preview</button>
+          <button id="publish-pp" class="px-4 py-2 rounded-lg text-white font-semibold" style="background:var(--hsd-pink); box-shadow:var(--glow-pink)">Publish (Demo)</button>
+        </div>
+        <div id="pp-preview" class="mt-6 bordered rounded-xl p-5 hidden"></div>
+      </div>
+    </section>
+
+    <!-- EXISTING COMMERCIAL FUNNELS -->
+    <section id="packages" class="py-16 md:py-24 fade-in-section">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-white" style="font-family:var(--font-display)">Our Website Packages</h2>
+        <p class="mt-3 text-lg max-w-2xl mx-auto">Clear, scalable options. Click a card to see exactly what’s included.</p>
+      </div>
+      <div id="platform-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 [perspective:1000px]"></div>
+    </section>
+
+    <!-- MODAL for Package Details -->
+    <div id="platform-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4" aria-hidden="true">
+      <div class="bg-[var(--hsd-ink-soft)] text-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative bordered">
+        <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-4xl font-light" aria-label="Close">&times;</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+    
+    <!-- MODAL for AI Copywriter -->
+    <div id="copywriter-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4" aria-hidden="true">
+      <div class="bg-[var(--hsd-ink-soft)] text-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative bordered">
+        <button id="copywriter-modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-4xl font-light" aria-label="Close">&times;</button>
+        <h2 class="text-3xl font-bold mb-4 text-white" style="font-family:var(--font-display)">✨ Site Copywriter</h2>
+        <form id="copywriter-form" class="space-y-4">
+            <div>
+                <label for="cw-company" class="block mb-1">Company Name</label>
+                <input type="text" id="cw-company" name="company" class="w-full rounded-lg bg-black/20 bordered px-3 py-2" placeholder="e.g., SparkleClean" required />
+            </div>
+            <div>
+                <label for="cw-pagetype" class="block mb-1">Page Type</label>
+                <select id="cw-pagetype" name="pagetype" class="w-full rounded-lg bg-black/20 bordered px-3 py-2">
+                    <option value="Home">Home Page</option>
+                    <option value="About Us">About Us</option>
+                    <option value="Services">Services</option>
+                    <option value="Contact">Contact</option>
+                </select>
+            </div>
+            <div>
+                <label for="cw-brief" class="block mb-1">Keywords or Brief Description</label>
+                <textarea id="cw-brief" name="brief" class="w-full rounded-lg bg-black/20 bordered px-3 py-2" rows="3" placeholder="e.g., eco-friendly home cleaning for busy professionals in Austin, TX"></textarea>
+            </div>
+            <button type="submit" id="cw-generate-btn" class="px-6 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2" style="background:var(--hsd-teal); box-shadow:var(--glow-teal)">Generate Copy</button>
+        </form>
+        <div id="cw-result" class="mt-6 bordered rounded-xl p-5 hidden bg-black/20"></div>
+      </div>
+    </div>
+
+
+    <!-- PRICING -->
+    <section id="pricing" class="py-16 md:py-24 section-bg rounded-2xl fade-in-section">
+      <div class="text-center mb-10">
+        <h2 class="text-4xl md:text-5xl font-bold text-white" style="font-family:var(--font-display)">Simple, Transparent Pricing</h2>
+        <p class="mt-3 text-lg max-w-2xl mx-auto">Flexible monthly or annual plans — no surprises.</p>
+      </div>
+      <div class="max-w-4xl mx-auto">
+        <div class="flex justify-center mb-8">
+          <div class="bg-black/20 rounded-lg p-1 flex space-x-1">
+            <button id="toggle-monthly" class="px-5 py-2 text-sm font-semibold rounded-md shadow-sm" style="background:var(--hsd-ink-soft); color:var(--hsd-pink)">Monthly</button>
+            <button id="toggle-annual" class="px-5 py-2 text-sm font-semibold rounded-md text-gray-300">Annual (Save)</button>
+          </div>
+        </div>
+        <div class="chart-container"><canvas id="pricingChart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ABOUT + CTA -->
+    <section id="about" class="py-16 md:py-24 fade-in-section">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4" style="font-family:var(--font-display)">Built for clarity, speed, and heart</h2>
+        <p class="text-lg">We guide you from concept to click with a system that’s thoughtful, fast, and future‑proof — so your story feels at home online.</p>
+        <p class="mt-6 text-xl slogan">Lighting the Way to Your Digital Home.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="py-16 md:py-24 section-bg rounded-2xl fade-in-section">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" style="font-family:var(--font-display)">Tell us about your project</h2>
+        <form id="lead-form" class="grid md:grid-cols-2 gap-4" aria-label="Contact form">
+          <label class="block">
+            <span class="block mb-1">Name</span>
+            <input type="text" name="name" class="w-full rounded-lg bg-black/20 bordered px-3 py-2" placeholder="Your name" required />
+          </label>
+          <label class="block">
+            <span class="block mb-1">Email</span>
+            <input type="email" name="email" class="w-full rounded-lg bg-black/20 bordered px-3 py-2" placeholder="you@example.com" required />
+          </label>
+          <label class="block">
+            <span class="block mb-1">Industry</span>
+            <input type="text" name="industry" class="w-full rounded-lg bg-black/20 bordered px-3 py-2" placeholder="e.g., Landscaping" />
+          </label>
+          <label class="block">
+            <span class="block mb-1">Budget</span>
+            <select name="budget" class="w-full rounded-lg bg-black/20 bordered px-3 py-2">
+              <option value="<1k">< $1k</option><option value="1-5k">$1k–$5k</option><option value="5-10k">$5k–$10k</option><option value=">10k">> $10k</option>
+            </select>
+          </label>
+          <label class="block md:col-span-2">
+            <span class="block mb-1">What do you want to build?</span>
+            <textarea name="goals" class="w-full rounded-lg bg-black/20 bordered px-3 py-2" rows="5" placeholder="Goals, audience, features…"></textarea>
+          </label>
+          <div class="md:col-span-2 flex flex-wrap gap-3 items-center">
+            <button type="submit" class="px-6 py-3 rounded-lg font-semibold text-white" style="background:var(--hsd-teal); box-shadow:var(--glow-teal)">Request Quote</button>
+             <button type="button" id="analyze-project-btn" class="px-4 py-2 rounded-lg text-white font-semibold flex items-center justify-center gap-2" style="background:var(--hsd-pink); box-shadow:var(--glow-pink)">✨ Analyze Project Idea</button>
+            <span id="lead-score" class="text-sm opacity-80"></span>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t" style="background:var(--hsd-ink-soft); border-color:var(--hsd-border)">
+    <div class="container mx-auto px-6 py-8 text-center">
+      <p>&copy; 2025 HopeSparkDigital. A Rooted in Hope Services LLC company.</p>
+    </div>
+  </footer>
+
+  <!-- Floating AI Sales Bot -->
+  <div id="hsd-chat">
+    <button id="chat-toggle" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" aria-label="Open chat">💬</button>
+    <div id="hsd-chat-panel" role="dialog" aria-modal="true" aria-label="Digital Sales Assistant">
+      <header class="flex items-center justify-between">
+        <strong>✨ Digital Sales Assistant</strong>
+        <button id="chat-close" class="text-sm opacity-80 hover:opacity-100">Close</button>
+      </header>
+      <div id="hsd-chat-log" aria-live="polite"></div>
+      <form id="hsd-chat-form" class="p-2 border-t border-[var(--hsd-border)] flex gap-2">
+        <input id="hsd-chat-input" class="flex-1 rounded bg-black/20 bordered px-2 py-2" placeholder="Ask about plans, timelines, or results…" />
+        <button class="px-3 py-2 rounded text-white" style="background:var(--hsd-pink)">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cursor spark trail canvas -->
+  <canvas id="spark-trail"></canvas>
+
+  <!-- Main app logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+
+      /* =================================================================
+       * ================== GEMINI API & UTILITIES =======================
+       * ================================================================= */
+      
+      // Toggle to true in dev to watch sanitization & depth expansions
+      const DEBUG_AI_GUARDS = true;
+
+      async function callGemini(prompt, generationConfig = null, maxRetries = 3) {
+          const apiKey = ""; 
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+          
+          const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+          if (generationConfig) {
+              payload.generationConfig = generationConfig;
+          }
+
+          let attempt = 0;
+          while (attempt < maxRetries) {
+              try {
+                  const response = await fetch(apiUrl, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(payload)
+                  });
+
+                  if (!response.ok) {
+                      if (response.status === 429) throw new Error('Rate limited');
+                      console.error(`API Error: ${response.status} ${response.statusText}`);
+                      return null; 
+                  }
+
+                  const result = await response.json();
+                  return result.candidates?.[0]?.content?.parts?.[0]?.text || null;
+              } catch (error) {
+                  console.warn(`Attempt ${attempt + 1} failed. Retrying...`, error.message);
+                  attempt++;
+                  if (attempt >= maxRetries) {
+                      console.error("Max retries reached. Failed to call Gemini API.");
+                      return null;
+                  }
+                  await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+              }
+          }
+          return null;
+      }
+
+      function genRequestId() {
+        // Browser-safe random ID generator
+        return Math.random().toString(16).slice(2, 10);
+      }
+
+      function safeJSONParse(aiText, fallbackValue, reqId = 'no-id') {
+        if (DEBUG_AI_GUARDS) console.info(`[AI-Guard:${reqId}] Raw AI text:`, aiText);
+        if (!aiText || typeof aiText !== 'string') return fallbackValue;
+
+        let clean = aiText
+          .replace(/[\u201C\u201D]/g, '"')
+          .replace(/[\u2018\u2019]/g, "'")
+          .replace(/,\s*([}\]])/g, '$1')
+          .trim();
+
+        const fenceMatch = clean.match(/```(?:json)?([\s\S]*?)```/i);
+        if (fenceMatch) clean = fenceMatch[1].trim();
+
+        try {
+          const parsed = JSON.parse(clean);
+          if (DEBUG_AI_GUARDS) console.info(`[AI-Guard:${reqId}] Parsed JSON OK:`, parsed);
+          return parsed;
+        } catch (err) {
+          console.warn(`[AI-Guard:${reqId}] JSON parse failed:`, err.message);
+          return fallbackValue;
+        }
+      }
+
+      async function ensureContentDepth(parsedObj, schemaMap, minWords, rePromptFn, reqId = 'no-id') {
+        const tooShort = Object.entries(schemaMap).some(([field, required]) => {
+          const val = parsedObj?.[field];
+          return required && (typeof val !== 'string' || val.split(/\s+/).length < minWords);
+        });
+
+        if (tooShort) {
+          if (DEBUG_AI_GUARDS) {
+            console.info(`[AI-Guard:${reqId}] Content too short — triggering re-prompt`, {
+              minWords,
+              schemaMap,
+              parsedObj
+            });
+          }
+          const expanded = await rePromptFn(parsedObj);
+          return safeJSONParse(expanded, parsedObj, reqId);
+        }
+
+        if (DEBUG_AI_GUARDS) console.info(`[AI-Guard:${reqId}] Content passed depth check`);
+        return parsedObj;
+      }
+
+      async function runAIwithGuards(prompt, generationConfig, fallback, schemaMap, minWords) {
+        const reqId = genRequestId();
+        if (DEBUG_AI_GUARDS) console.info(`[AI-Guard:${reqId}] Sending prompt to Gemini:`, prompt);
+
+        const aiText = await callGemini(prompt, generationConfig);
+        const parsed = safeJSONParse(aiText, fallback, reqId);
+
+        if (!schemaMap || !minWords) return parsed;
+
+        return await ensureContentDepth(parsed, schemaMap, minWords, async (partial) => {
+          if (DEBUG_AI_GUARDS) console.info(`[AI-Guard:${reqId}] Re-prompting with partial:`, partial);
+          const rePrompt = `
+            Expand this response in HopeSparkDigital's brand voice.
+            Add concrete examples, scenarios, and avoid generic filler.
+            Maintain the exact JSON schema and field names.
+            Current content: ${JSON.stringify(partial)}
+          `;
+          const aiExpanded = await callGemini(rePrompt, generationConfig);
+          return aiExpanded;
+        }, reqId);
+      }
+
+
+      /* =================================================================
+       * ================== STATE & ADAPTERS =============================
+       * ================================================================= */
+      const state = {
+        user: { isMember:false, plan:null },
+        abVariant: localStorage.getItem('hsd_ab') || (Math.random()>.5 ? 'A':'B'),
+        stats: { sites: 0, revenue: 0, live: 0 }
+      };
+      
+      const params = new URLSearchParams(location.search);
+      const industryParam = params.get('industry');
+
+      const Adapters = {
+        billing:{
+          createCheckoutSession: async (item)=>{ console.log('Checkout start', item); alert('Demo checkout for: '+item.name); return { ok:true, id:'sess_demo' } }
+        },
+        affiliates:{
+          fetchOffers: async (context)=>{
+            const pool = [
+              { id:'tool-seo', name:'RankPilot AI', payout:24, url:'#', badge:'SEO', desc:'Auto‑optimize pages with AI.' },
+              { id:'tool-email', name:'SendFlow', payout:38, url:'#', badge:'Email', desc:'Smart email journeys.' },
+              { id:'tool-host', name:'HyperHost', payout:85, url:'#', badge:'Hosting', desc:'Fast NVMe hosting.' },
+              { id:'tool-forms', name:'FormMint', payout:12, url:'#', badge:'Forms', desc:'High‑convert forms.' },
+              { id:'tool-analytics', name:'PulseMetrics', payout:18, url:'#', badge:'Analytics', desc:'AI insights.' },
+              { id:'tool-chat', name:'ChatFuse', payout:22, url:'#', badge:'Chat', desc:'Site chatbots.' },
+              { id:'tool-sms', name:'TextSpark', payout:16, url:'#', badge:'SMS', desc:'Automated texting.' },
+              { id:'tool-cdn', name:'EdgeCDN', payout:28, url:'#', badge:'CDN', desc:'Global edge speed.' }
+            ];
+            return pool.sort(()=>Math.random()-0.5).slice(0,8);
+          }
+        },
+        ai:{
+          salesbotReply: async (message) => {
+            const prompt = `You are a senior HopeSparkDigital solutions consultant. Answer in JSON: { "reply": string }. Provide 5–7 sentences with concrete examples and relevant ROI scenarios. User question: "${message}"`;
+            const fallback = { reply: "I'm here to help with your HopeSparkDigital questions." };
+            const schema = { reply: true };
+            const config = { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { reply: { type: "STRING" } }, required: ["reply"] } };
+            return await runAIwithGuards(prompt, config, fallback, schema, 20);
+          },
+          generateBlogPosts: async (topic) => {
+            const prompt = `Write JSON: [{ "title": string, "excerpt": string }] for 3 rich, detail-filled blog post ideas on "${topic}" in HopeSparkDigital's voice. Excerpts should be at least 40 words.`;
+            const fallback = [];
+            const schema = { title: true, excerpt: true };
+            const config = { responseMimeType: "application/json", responseSchema: { type: "ARRAY", items: { type: "OBJECT", properties: { title: { type: "STRING" }, excerpt: { type: "STRING" } }, required: ["title", "excerpt"] } } };
+            const posts = await runAIwithGuards(prompt, config, fallback, schema, 10);
+            return posts.map(p => ({ ...p, id: 'p' + Date.now() + Math.random(), url: '#' }));
+          },
+          generateProgrammaticPage: async (keyword) => {
+            const prompt = `You are an expert HopeSparkDigital copywriter. Return JSON: { "h1": string, "copy": string, "faqs": [{q: string, a: string}] }. Ensure "copy" is at least 100 words and provide 2–4 in-depth FAQs. Keyword: "${keyword}"`;
+            const fallback = { h1: "Page coming soon", copy: "Content for this topic is being generated. Please check back shortly.", faqs: [] };
+            const schema = { h1: true, copy: true };
+            const config = { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { h1: { type: "STRING" }, copy: { type: "STRING" }, faqs: { type: "ARRAY", items: { type: "OBJECT", properties: { q: { type: "STRING" }, a: { type: "STRING" } }, required: ["q", "a"] } } }, required: ["h1", "copy", "faqs"] } };
+            return await runAIwithGuards(prompt, config, fallback, schema, 15);
+          },
+          analyzeProject: async (description) => {
+            const prompt = `You are a project strategist. Return JSON: { "summary": string, "score": number }. Summary must be at least 50 words. Project description: "${description}"`;
+            const fallback = { summary: "", score: 0 };
+            const schema = { summary: true };
+            const config = { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { summary: { type: "STRING" }, score: { type: "NUMBER" } }, required: ["summary", "score"] } };
+            return await runAIwithGuards(prompt, config, fallback, schema, 12);
+          },
+          personalizeHero: async (industry) => {
+            const prompt = `You are a HopeSparkDigital brand strategist. Return JSON: { "headline": string, "subcopy": string }. Subcopy must be at least 25 words. Industry: "${industry}". Original Headline: 'Lighting the Way to Your Digital Home.' Original Subcopy: 'Launch a revenue-ready website and growth stack in minutes with our intelligent platform.'`;
+            const fallback = { headline: "", subcopy: "" };
+            const schema = { headline: true, subcopy: true };
+            const config = { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { headline: { type: "STRING" }, subcopy: { type: "STRING" } }, required: ["headline", "subcopy"] } };
+            return await runAIwithGuards(prompt, config, fallback, schema, 8);
+          },
+          generateSiteCopy: async (details) => {
+            const prompt = `You are a brand copywriter for HopeSparkDigital. Return JSON: { "headline": string, "body": string }. Body must be at least 80 words, rich in benefit-driven language. Details: ${details}`;
+            const fallback = { headline: "", body: "" };
+            const schema = { headline: true, body: true };
+            const config = { responseMimeType: "application/json", responseSchema: { type: "OBJECT", properties: { headline: { type: "STRING" }, body: { type: "STRING" } }, required: ["headline", "body"] } };
+            return await runAIwithGuards(prompt, config, fallback, schema, 15);
+          }
+        },
+        abtest:{ choose: ()=> state.abVariant, track: (event, data)=>{ console.log('A/B event', event, data) } },
+        crm:{ trackEvent:(name,payload)=>console.log('CRM',name,payload) }
+      };
+
+      /* =================================================================
+       * ================== MAIN APPLICATION LOGIC =======================
+       * ================================================================= */
+
+      // NAV ACTIVE STATES
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('nav .nav-link');
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            navLinks.forEach(link=>{
+              const active = link.getAttribute('href').slice(1) === entry.target.id;
+              link.setAttribute('aria-current', active ? 'true' : 'false');
+            });
+          }
+        });
+      }, { rootMargin:"-50% 0px -50% 0px" });
+      sections.forEach(s=>io.observe(s));
+
+      // MOBILE MENU
+      const mobileBtn = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileBtn.addEventListener('click', ()=>{
+        const open = mobileMenu.classList.toggle('hidden') ? false : true;
+        mobileBtn.setAttribute('aria-expanded', String(open));
+      });
+
+      // FADE-IN
+      const fadeUpObserver = new IntersectionObserver((entries, obs)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){ entry.target.classList.add('is-visible'); obs.unobserve(entry.target); }
+        });
+      }, { threshold:.1 });
+      document.querySelectorAll('.fade-in-section').forEach(el=>fadeUpObserver.observe(el));
+
+      // PERSONALIZATION
+      (async function personalizeContent() {
+          const heroSubcopy = document.getElementById('hero-subcopy');
+          const heroHeadline = document.querySelector('#hero-content h1 .slogan');
+
+          if (industryParam) {
+              const personalizedContent = await Adapters.ai.personalizeHero(industryParam);
+              if (personalizedContent && personalizedContent.headline) {
+                  heroHeadline.innerHTML = ''; // Clear previous content safely
+                  const span = document.createElement('span');
+                  span.className = 'slogan sweep';
+                  span.textContent = personalizedContent.headline;
+                  heroHeadline.appendChild(span);
+                  heroSubcopy.textContent = personalizedContent.subcopy;
+              } else {
+                  // Fallback to simple replacement if API fails
+                  heroSubcopy.textContent = `Launch a revenue-ready ${industryParam} website and growth stack in minutes.`;
+              }
+          }
+      })();
+
+      // LIVE OPS STATS
+      const elSites = document.getElementById('stat-sites');
+      const elRev = document.getElementById('stat-revenue');
+      const elLive = document.getElementById('stat-live');
+      function tickStats(){
+        const s = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--motion-scale')) || 1;
+        state.stats.sites += Math.random()>.6 ? 1 : 0;
+        state.stats.revenue += Math.random()>.7 ? Math.floor(Math.random()*50)+9 : 0;
+        state.stats.live = 120 + Math.floor(Math.random()*40);
+        elSites.textContent = state.stats.sites;
+        elRev.textContent = state.stats.revenue.toLocaleString();
+        elLive.textContent = state.stats.live;
+      }
+      setInterval(tickStats, 2000); tickStats();
+
+      // A/B TESTING
+      const variant = Adapters.abtest.choose();
+      const cta = document.getElementById('cta-primary');
+      if(variant === 'B'){ cta.textContent = 'Start Free with Our Platform'; cta.style.background = 'var(--hsd-pink)'; cta.style.boxShadow = 'var(--glow-pink)' }
+      Adapters.abtest.track('variant_seen', {variant});
+
+      // MARKETPLACE & AI COPYWRITER
+      const services = [
+        { id:'svc-copy', icon:'📝', name:'Site Copywriter', desc:'Generate on‑brand pages in minutes.', price:39, isTool: true },
+        { id:'svc-seo', icon:'🔎', name:'SEO Boost Pack', desc:'Fix on‑page issues and metadata.', price:59 },
+        { id:'svc-chat', icon:'🤖', name:'Chatbot Embed', desc:'Qualify leads 24/7 on your site.', price:79 },
+        { id:'svc-audit', icon:'🧪', name:'Conversion Audit', desc:'Heatmap + uplift suggestions.', price:49 },
+        { id:'svc-video', icon:'🎬', name:'Video Shorts', desc:'Auto‑generate branded reels.', price:69 },
+        { id:'svc-ppc', icon:'📈', name:'Smart PPC Starter', desc:'Auto keywords + ad copy.', price:99 }
+      ];
+      const marketGrid = document.getElementById('market-grid');
+      services.forEach(svc=>{
+        const card = document.createElement('div');
+        card.className = 'platform-card p-6 rounded-xl bordered';
+        const buttonHtml = svc.isTool 
+            ? `<button data-tool="${svc.id}" class="px-3 py-2 rounded text-white text-sm font-semibold flex items-center justify-center gap-2" style="background:var(--hsd-teal)">✨ Try It Free</button>`
+            : `<button data-buy="${svc.id}" class="px-3 py-2 rounded text-white text-sm font-semibold" style="background:var(--hsd-pink)">Buy Now</button>`;
+
+        card.innerHTML = `
+          <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mb-4 bordered" style="background:var(--hsd-ink-soft); color:var(--hsd-teal)">${svc.icon}</div>
+          <h3 class="text-xl font-bold text-white">${svc.name}</h3>
+          <p class="mt-1 text-sm">${svc.desc}</p>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-semibold">$${svc.price}</span>
+            ${buttonHtml}
+          </div>
+        `;
+        
+        if (svc.isTool) {
+            card.querySelector('button[data-tool]').addEventListener('click', () => {
+                if (svc.id === 'svc-copy') {
+                    openCopywriterModal();
+                }
+            });
+        } else {
+            card.querySelector('button[data-buy]').addEventListener('click', async ()=>{
+              await Adapters.billing.createCheckoutSession({type:'service', id:svc.id, name:svc.name, price:svc.price});
+              Adapters.crm.trackEvent('purchase_attempt', {id:svc.id});
+            });
+        }
+        marketGrid.appendChild(card);
+      });
+
+      // AI Copywriter Modal Logic
+      const copywriterModal = document.getElementById('copywriter-modal');
+      const copywriterForm = document.getElementById('copywriter-form');
+      const cwResultEl = document.getElementById('cw-result');
+      const cwGenerateBtn = document.getElementById('cw-generate-btn');
+
+      function openCopywriterModal() {
+          copywriterModal.classList.remove('hidden');
+          copywriterModal.setAttribute('aria-hidden', 'false');
+      }
+      function closeCopywriterModal() {
+          copywriterModal.classList.add('hidden');
+          copywriterModal.setAttribute('aria-hidden', 'true');
+      }
+      
+      document.getElementById('copywriter-modal-close-btn').addEventListener('click', closeCopywriterModal);
+      copywriterModal.addEventListener('click', (e) => { if (e.target === copywriterModal) closeCopywriterModal(); });
+
+      copywriterForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(copywriterForm);
+          const company = formData.get('company');
+          const pageType = formData.get('pagetype');
+          const brief = formData.get('brief');
+          const details = JSON.stringify({ company, pageType, brief });
+
+          cwGenerateBtn.disabled = true;
+          cwGenerateBtn.innerHTML = `<span class="loader"></span> Generating...`;
+          cwResultEl.classList.add('hidden');
+
+          const result = await Adapters.ai.generateSiteCopy(details);
+          
+          cwGenerateBtn.disabled = false;
+          cwGenerateBtn.innerHTML = `Generate Copy`;
+          cwResultEl.classList.remove('hidden');
+
+          if (result && result.headline) {
+              cwResultEl.innerHTML = `
+                  <h3 class="text-xl font-bold text-white">${result.headline}</h3>
+                  <p class="mt-2 text-sm">${result.body}</p>
+              `;
+          } else {
+              cwResultEl.innerHTML = `<p>Sorry, we couldn't generate copy. Please try again with a more detailed brief.</p>`;
+          }
+      });
+
+
+      // SUBSCRIPTIONS & PAYWALL
+      document.querySelectorAll('[data-sub]').forEach(btn=>{
+        btn.addEventListener('click', async ()=>{
+          const plan = btn.getAttribute('data-sub');
+          await Adapters.billing.createCheckoutSession({type:'subscription', id:plan, name:plan});
+          state.user.isMember = true; state.user.plan = plan; unlockMemberTools();
+          Adapters.crm.trackEvent('sub_attempt', {plan});
+        });
+      });
+      function unlockMemberTools(){
+        if(!state.user.isMember) return;
+        document.querySelectorAll('.paywall').forEach(el=>{ el.classList.remove('paywall'); el.innerHTML += `<div class="mt-3 text-xs opacity-70">Unlocked via ${state.user.plan} plan</div>`; });
+      }
+
+      // AFFILIATE DEALS COVERFLOW
+      async function renderDealsCoverflow(offers){
+        const track = document.getElementById('coverflow-track');
+        if(!track) return;
+        track.innerHTML = '';
+        const radius = 420;
+        const count = offers.length;
+        offers.forEach((o, i)=>{
+          const item = document.createElement('a');
+          item.href = o.url; item.target = '_blank'; item.rel = 'sponsored noopener';
+          item.className = 'coverflow-item';
+          item.innerHTML = `
+            <div class="platform-card tilt3d p-5 rounded-xl bordered">
+              <div class="flex items-center justify-between">
+                <span class="badge">${o.badge}</span>
+                <span class="text-xs opacity-80">Up to $${o.payout} back</span>
+              </div>
+              <h4 class="text-lg font-semibold text-white mt-3">${o.name}</h4>
+              <p class="text-sm mt-1">${o.desc}</p>
+            </div>
+            <div class="shadow"></div>
+          `;
+          const angle = (i / count) * Math.PI * 2;
+          item.style.transform = `rotateY(${angle}rad) translateZ(${radius}px)`;
+          track.appendChild(item);
+        });
+        // controls
+        let rot = 0, dragging=false, startX=0, v=0, auto= true;
+        const damp = 0.93;
+        const container = track.parentElement;
+        const onPointerDown = e=>{ dragging=true; auto=false; startX = (e.touches?.[0]?.clientX ?? e.clientX) || 0; };
+        const onPointerMove = e=>{
+          if(!dragging) return;
+          const x = (e.touches?.[0]?.clientX ?? e.clientX) || 0;
+          const dx = x - startX; startX = x;
+          rot += dx * 0.004; v = dx * 0.004;
+          track.style.transform = `rotateY(${rot}rad)`;
+        };
+        const onPointerUp = ()=>{ dragging=false; };
+        container.addEventListener('mousedown', onPointerDown);
+        window.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('mouseup', onPointerUp);
+        container.addEventListener('touchstart', onPointerDown, {passive:true});
+        window.addEventListener('touchmove', onPointerMove, {passive:true});
+        window.addEventListener('touchend', onPointerUp);
+        container.addEventListener('wheel', (e)=>{ rot += e.deltaY * 0.0009; track.style.transform = `rotateY(${rot}rad)`; auto=false; }, {passive:true});
+        // inertial + auto orbit
+        function loop(){
+          requestAnimationFrame(loop);
+          const s = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--motion-scale')) || 1;
+          if(!dragging){
+            if(auto) rot += 0.003 * s;
+            else { rot += v; v *= damp; if(Math.abs(v) < 0.0001) auto = true; }
+            track.style.transform = `rotateY(${rot}rad)`;
+          }
+        }
+        loop();
+      }
+      (async function initDeals(){
+        const offers = await Adapters.affiliates.fetchOffers({industry: industryParam||'General'});
+        renderDealsCoverflow(offers);
+        setInterval(async ()=>{ const o = await Adapters.affiliates.fetchOffers({}); renderDealsCoverflow(o); }, 1000*60*10);
+      })();
+
+      // AUTO-BLOG
+      async function renderBlog(){
+        const posts = await Adapters.ai.generateBlogPosts(industryParam||'Local Services');
+        const grid = document.getElementById('blog-grid'); if(!grid) return;
+        grid.innerHTML = '';
+        if (!posts || posts.length === 0) {
+            grid.innerHTML = `<p class="md:col-span-3 text-center">Could not generate blog posts at this time.</p>`;
+            return;
+        }
+        posts.forEach(p=>{
+          const card = document.createElement('article');
+          card.className = 'bordered rounded-xl p-5 bg-[var(--hsd-ink-soft)] platform-card';
+          card.innerHTML = `
+            <h3 class="text-lg font-bold text-white">${p.title}</h3>
+            <p class="text-sm mt-2">${p.excerpt}</p>
+            <div class="mt-4 flex items-center justify-between">
+              <a href="${p.url}" class="text-[var(--hsd-teal)] font-semibold">Read</a>
+              <button class="text-sm px-3 py-1 rounded text-white" style="background:var(--hsd-pink)">Promote</button>
+            </div>
+          `;
+          card.querySelector('button').addEventListener('click', ()=>Adapters.crm.trackEvent('promote_post', {id:p.id}));
+          grid.appendChild(card);
+        });
+      }
+      renderBlog();
+
+      // PROGRAMMATIC PAGES
+      const kw = document.getElementById('kw'), preview = document.getElementById('pp-preview');
+      const genPpBtn = document.getElementById('gen-pp');
+      genPpBtn?.addEventListener('click', async ()=>{
+        const keyword = kw.value.trim();
+        if(!keyword) {
+            alert('Enter a keyword/industry first.');
+            return;
+        }
+        
+        genPpBtn.disabled = true;
+        genPpBtn.innerHTML = `<span class="loader"></span> Generating...`;
+
+        const page = await Adapters.ai.generateProgrammaticPage(keyword);
+        
+        genPpBtn.disabled = false;
+        genPpBtn.innerHTML = `✨ Generate Preview`;
+
+        preview.classList.remove('hidden');
+        if (page && page.h1) {
+             preview.innerHTML = `
+              <h4 class="text-2xl font-bold text-white">${page.h1}</h4>
+              <p class="mt-2">${page.copy}</p>
+              <div class="mt-4">
+                <h5 class="font-semibold">FAQs</h5>
+                <ul class="mt-2 space-y-1">${(page.faqs || []).map(f=>`<li>• <strong>${f.q}</strong> — ${f.a}</li>`).join('')}</ul>
+              </div>
+            `;
+        } else {
+            preview.innerHTML = `<p>Sorry, we couldn't generate content for that keyword. Please try another one.</p>`;
+        }
+      });
+      document.getElementById('publish-pp')?.addEventListener('click', ()=>{
+        if(preview.classList.contains('hidden')) return alert('Generate a preview first.');
+        alert('Demo: Programmatic page scheduled for publish.');
+        Adapters.crm.trackEvent('pp_publish_demo', { keyword: kw.value.trim() });
+      });
+
+      // CONTACT FORM ANALYSIS
+      const analyzeBtn = document.getElementById('analyze-project-btn');
+      const leadScoreEl = document.getElementById('lead-score');
+      const goalsTextarea = document.querySelector('textarea[name="goals"]');
+
+      analyzeBtn.addEventListener('click', async () => {
+          const description = goalsTextarea.value.trim();
+          if (!description) {
+              alert('Please describe your project first.');
+              return;
+          }
+
+          analyzeBtn.disabled = true;
+          analyzeBtn.innerHTML = `<span class="loader"></span> Analyzing...`;
+          leadScoreEl.textContent = '';
+
+          const result = await Adapters.ai.analyzeProject(description);
+
+          analyzeBtn.disabled = false;
+          analyzeBtn.innerHTML = `✨ Analyze Project Idea`;
+
+          if (result && result.summary) {
+              leadScoreEl.innerHTML = `<strong>Summary:</strong> ${result.summary} <br> <strong>Potential Score:</strong> ${result.score}/100`;
+          } else {
+              leadScoreEl.textContent = "Could not analyze the project idea.";
+          }
+      });
+
+
+      // PACKAGES & MODAL
+      const platformData = [
+        { name:'Starter Site', tagline:'Perfect for new businesses', icon:'🚀', description:'One‑page professional site.', details:{ pros:["Custom One‑Page Design","Mobile‑Responsive","Contact Form","Basic SEO"], cons:["Single page","Max 5 sections"], bestFor:"New businesses and freelancers." } },
+        { name:'Business Pro', tagline:'For growing teams', icon:'💼', description:'Multi‑page with lead capture.', details:{ pros:["Up to 5 pages","Blog & Portfolio","Advanced SEO","Email Integration"], cons:["No e‑commerce","Content updates extra"], bestFor:"Lead‑driven businesses expanding digital." } },
+        { name:'E‑commerce Elite', tagline:'Ready to sell', icon:'🛒', description:'Complete, conversion‑ready store.', details:{ pros:["Full store","Secure payments","Product templates","Inventory"], cons:["Higher setup cost","Txn fees apply"], bestFor:"Brands selling online with scale." } }
+      ];
+      const platformGrid = document.getElementById('platform-grid');
+      platformData.forEach(platform=>{
+        const card = document.createElement('div');
+        card.className = 'platform-card p-8 rounded-xl bordered cursor-pointer';
+        card.innerHTML = `
+          <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-5 bordered" style="background:var(--hsd-ink-soft); color:var(--hsd-teal)">${platform.icon}</div>
+          <h3 class="text-2xl font-bold text-white">${platform.name}</h3>
+          <p class="font-semibold mt-1" style="color:var(--hsd-teal)">${platform.tagline}</p>
+          <p class="mt-4">${platform.description}</p>
+        `;
+        card.addEventListener('click', ()=>openPlatformModal(platform));
+        platformGrid.appendChild(card);
+      });
+
+      const platformModal = document.getElementById('platform-modal');
+      const modalContent = document.getElementById('modal-content');
+      function openPlatformModal(platform){
+        modalContent.innerHTML = `
+          <div class="w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 bordered" style="background:var(--hsd-ink); color:var(--hsd-teal)">${platform.icon}</div>
+          <h2 class="text-3xl font-bold mb-2 text-white">${platform.name}</h2>
+          <p class="font-semibold text-lg mb-6" style="color:var(--hsd-teal)">${platform.tagline}</p>
+          <h4 class="text-xl font-semibold mb-3 text-white">Best For</h4>
+          <p class="p-4 rounded-lg bg-black/20">${platform.details.bestFor}</p>
+          <h4 class="text-xl font-semibold mb-3 text-white mt-6">Pros</h4>
+          <ul class="list-disc list-inside space-y-1 text-sm">${platform.details.pros.map(p=>`<li>${p}</li>`).join('')}</ul>
+          <h4 class="text-xl font-semibold mb-3 text-white mt-6">Cons</h4>
+          <ul class="list-disc list-inside space-y-1 text-sm">${platform.details.cons.map(c=>`<li>${c}</li>`).join('')}</ul>
+        `;
+        platformModal.classList.remove('hidden');
+        platformModal.setAttribute('aria-hidden','false');
+      }
+
+      function closePlatformModal() {
+        platformModal.classList.add('hidden');
+        platformModal.setAttribute('aria-hidden', 'true');
+      }
+      document.getElementById('modal-close-btn').addEventListener('click', closePlatformModal);
+      platformModal.addEventListener('click', (e) => { if (e.target === platformModal) closePlatformModal(); });
+
+    });
+  </script>
+</body>
+</html>
